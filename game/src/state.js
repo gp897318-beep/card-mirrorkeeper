@@ -16,6 +16,7 @@ function mkNewGame(rand) {
     lastType: null,      // type of the last card the player played
     lastPlayName: null,
     shards: 0,
+    shardTurn: 0,      // turn on which the last shard was earned (max 1/turn)
     mirror: null,        // { type, value } — what the rival copies next turn
     rivalSkipsNext: false,
     rivalPlan: null,     // telegraphed rival intent, shown a full turn ahead
@@ -100,10 +101,15 @@ function mkPlayCard(s, i) {
   s.stats.cardsPlayed++;
   var effect = mkApplyCard(s, card, true);
 
-  // SHARD RULE: a type different from your last play earns a shard.
+  // SHARD RULE: a type different from your last play earns ONE shard per
+  // turn; repeating a type steadies the reflection and resets shards to 0.
   var earnedShard = false;
-  if (s.lastType !== null && card.type !== s.lastType) {
+  if (s.lastType !== null && card.type === s.lastType) {
+    if (s.shards > 0) mkLog(s, "Same type twice — the reflection steadies, shards lost.");
+    s.shards = 0;
+  } else if (s.lastType !== null && s.shardTurn !== s.turn) {
     s.shards++;
+    s.shardTurn = s.turn;
     s.stats.shardsEarned++;
     earnedShard = true;
   }
@@ -153,21 +159,25 @@ function mkEndTurn(s) {
       summary.mirror = { type: s.mirror.type, value: s.mirror.value, effect: eff };
       mkLog(s, "🪞 Mirror copies " + MK_TYPES[s.mirror.type].label + " " + s.mirror.value + " — " + eff + ".");
     }
-    // 2) The rival plays one card of its own from its face-down hand.
-    var pick = mkRivalPick(s);
-    if (pick) {
+    // 2) The rival plays up to three cards of its own from its face-down hand.
+    s.rival.ember = Math.min(3 + Math.floor(s.turn / 2), 8);
+    var played = 0;
+    while (played < 3) {
+      var pick = mkRivalPick(s);
+      if (!pick) break;
       var rc = s.rival.hand.splice(pick.index, 1)[0];
       s.rival.discard.push(rc);
       var reff = mkApplyCard(s, rc, false);
       summary.rivalCard = { name: rc.name, type: rc.type, value: rc.value, effect: reff };
       mkLog(s, "Rival plays " + rc.name + " — " + reff + ".");
+      played++;
     }
     mkCheckEnd(s);
   }
   if (!s.winner) {
     s.turn++;
     s.stats.turns = s.turn;
-    s.player.maxEmber = Math.min(2 + s.turn, 10);
+    s.player.maxEmber = Math.min(3 + Math.floor(s.turn / 2), 8);
     s.player.ember = s.player.maxEmber;
     s.player.block = 0;
     s.rival.block = 0;

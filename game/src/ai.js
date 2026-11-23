@@ -13,7 +13,8 @@ function mkRivalPick(s) {
     if (hand[i].cost <= s.rival.ember) affordable.push(i);
   }
   if (!affordable.length) return null;
-  s.rival.ember = Math.min(2 + s.turn, 10);
+
+  function take(i) { s.rival.ember -= hand[i].cost; return { index: i }; }
 
   function byType(t) {
     var best = -1, bestVal = -1;
@@ -23,19 +24,19 @@ function mkRivalPick(s) {
     return best;
   }
   // Heal when hurt, finish when the player is nearly beaten.
-  if (s.rival.life <= 10) { var m = byType("mend"); if (m >= 0) return { index: m }; }
-  if (s.player.life <= 6) { var k = byType("strike"); if (k >= 0) return { index: k }; }
+  if (s.rival.life <= 10) { var m = byType("mend"); if (m >= 0) return take(m); }
+  if (s.player.life <= 6) { var k = byType("strike"); if (k >= 0) return take(k); }
   // Guard when the player's last play was a big Strike.
   if (s.lastType === "strike" && s.mirror && s.mirror.value >= 6) {
-    var g = byType("guard"); if (g >= 0 && Math.random() < 0.6) return { index: g };
+    var g = byType("guard"); if (g >= 0 && Math.random() < 0.6) return take(g);
   }
   // Otherwise prefer Strike, then Trick, then anything affordable.
   var pref = ["strike", "trick", "guard", "mend", "draw"];
   for (var p = 0; p < pref.length; p++) {
     var idx = byType(pref[p]);
-    if (idx >= 0) return { index: idx };
+    if (idx >= 0) return take(idx);
   }
-  return { index: affordable[0] };
+  return take(affordable[0]);
 }
 
 // Telegraph: what the rival is leaning towards next turn, in plain words.

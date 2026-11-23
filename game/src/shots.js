@@ -22,7 +22,7 @@ function mkShotBase() {
   s.player.life = 24;
   s.player.block = 4;
   s.player.ember = 6;
-  s.player.maxEmber = 8;
+  s.player.maxEmber = 6;
   s.player.hand = mkShotHand();
   s.rival.life = 9;
   s.rival.block = 0;
@@ -37,7 +37,7 @@ function mkShotBase() {
     "◆ SHARD! A different type than your last play. (2/3)",
     "🪞 Mirror copies GUARD 7 — gains 7 Block.",
     "Rival plays Shard Slash — deals 4 damage.",
-    "— Turn 7 — you draw 2, Ember refills to 8.",
+    "— Turn 7 — you draw 2, Ember refills to 6.",
     "You play Glass Edge — deals 3 damage.",
   ];
   return s;
