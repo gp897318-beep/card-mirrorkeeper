@@ -19,7 +19,7 @@ function mkCardEl(card, index, state) {
   var name = document.createElement("div");
   name.className = "name"; name.textContent = card.name;
   var rule = document.createElement("div");
-  rule.className = "rule"; rule.textContent = t.label + " — " + card.rule;
+  rule.className = "rule"; rule.textContent = card.rule;
   div.appendChild(key); div.appendChild(cost); div.appendChild(icon);
   div.appendChild(value); div.appendChild(name); div.appendChild(rule);
   div.addEventListener("click", function () { mkOnCardClick(index); });

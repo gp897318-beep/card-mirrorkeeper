@@ -1,5 +1,6 @@
 // MIRRORKEEPER entrypoint: copies game/ and screenshots/ beside this file
 // into the output dir and writes dossier.json with buildDossier.
+// Run twice; both runs must write byte-identical dossier.json.
 import { cp, mkdir, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
