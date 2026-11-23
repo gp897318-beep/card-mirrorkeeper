@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIRRORKEEPER — Mirror-Copy Card Duel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand"><span class="brand-mark">◈</span> MIRRORKEEPER</div>
+    <div class="objective">OBJECTIVE: Break the mirror — vary your card types to earn shards. 3 shards SHATTER it (+8 damage, rival skips a turn). First to 0 Life loses.</div>
+    <div class="turn-box">TURN <span id="turn-num">1</span></div>
+  </header>
+
+  <div id="life-row">
+    <div class="life you" id="life-you"><span class="heart">♥</span><span class="life-num" id="life-you-num">30</span><span class="life-label">YOU</span><span class="block-chip" id="block-you"></span></div>
+    <div class="vs">VS</div>
+    <div class="life rival" id="life-rival"><span class="life-label">MIRRORKEEPER</span><span class="block-chip" id="block-rival"></span><span class="life-num" id="life-rival-num">30</span><span class="heart">♥</span></div>
+  </div>
+
+  <main id="table">
+    <aside id="legend" class="panel">
+      <h2>LEGEND — CARD TYPES</h2>
+      <div class="legend-row"><span class="type-icon t-strike">⚔</span><b>STRIKE</b><span>red sword — deal damage</span></div>
+      <div class="legend-row"><span class="type-icon t-guard">🛡</span><b>GUARD</b><span>blue shield — gain Block</span></div>
+      <div class="legend-row"><span class="type-icon t-mend">❧</span><b>MEND</b><span>green leaf — heal Life</span></div>
+      <div class="legend-row"><span class="type-icon t-draw">✒</span><b>DRAW</b><span>gold quill — draw cards</span></div>
+      <div class="legend-row"><span class="type-icon t-trick">★</span><b>TRICK</b><span>purple star — damage + draw</span></div>
+      <h2>THE MIRROR RULE</h2>
+      <p class="legend-note">The rival <b>copies the type</b> of the last card you played. Play a <b>different type</b> than your last play to earn a <b>◆ SHARD</b>. <b>3 shards SHATTER</b> the mirror: +8 damage and the rival skips its next turn.</p>
+      <h2>YOUR DECK</h2>
+      <div class="deck-row">Deck <b id="deck-count">24</b> &nbsp; Discard <b id="discard-count">0</b></div>
+      <div class="deck-row">Ember <span id="ember-pips"></span></div>
+    </aside>
+
+    <section id="arena">
+      <div id="rival-zone">
+        <div id="rival-portrait">👁<span>MIRRORKEEPER</span></div>
+        <div id="rival-hand"><span class="rival-hand-label">RIVAL HAND</span><span id="rival-cards"></span><span id="rival-count">6 cards</span></div>
+        <div id="rival-plan">RIVAL PLANS: <b id="rival-plan-text">—</b></div>
+      </div>
+
+      <div id="mirror-frame">
+        <div class="mirror-glow"></div>
+        <div class="mirror-title">✦ THE MIRROR ✦</div>
+        <div id="mirror-card" class="mirror-card">
+          <div class="mirror-card-type" id="mirror-type-icon">?</div>
+          <div class="mirror-card-name" id="mirror-type-name">AWAITING YOUR FIRST CARD</div>
+          <div class="mirror-card-rule" id="mirror-type-rule">Play any card — the mirror will copy its type next turn.</div>
+        </div>
+        <div id="shard-row"><span class="shard-label">SHARDS</span><span id="shard-pips"></span><span class="shard-hint">3 = SHATTER +8 &amp; rival skips a turn</span></div>
+        <div id="callout-1" class="callout">⬆ The mirror copies YOUR last card type — telegraphed a full turn ahead</div>
+        <div id="callout-2" class="callout">⬅ Play a DIFFERENT type than your last play to earn a shard</div>
+        <div id="callout-3" class="callout">3 shards SHATTER the mirror ➜</div>
+        <div id="floater"></div>
+      </div>
+
+      <div id="player-zone">
+        <div id="player-portrait">🧑<span>YOU — THE BREAKER</span></div>
+        <div id="last-play">LAST PLAY: <b id="last-play-text">none yet</b></div>
+      </div>
+    </section>
+
+    <aside id="side" class="panel">
+      <h2>PLAY LOG</h2>
+      <div id="log"></div>
+    </aside>
+  </main>
+
+  <section id="hand-row">
+    <div id="hand-label">YOUR HAND — click a card or press 1–6 to play it</div>
+    <div id="hand"></div>
+  </section>
+
+  <footer id="controls">
+    <button id="btn-end" class="btn big">END TURN ⏎</button>
+    <button id="btn-restart" class="btn">RESTART (R)</button>
+    <button id="btn-mute" class="btn">SOUND: ON (M)</button>
+    <span class="keys-hint">Keys: 1–6 play card · Space end turn · R restart · M mute</span>
+  </footer>
+</div>
+
+<div id="title-screen" class="overlay">
+  <div class="overlay-card title-card">
+    <div class="title-mark">◈</div>
+    <h1>MIRRORKEEPER</h1>
+    <p class="tagline">A mirror-copy card duel in the Hall of Mirrors</p>
+    <p class="howto">The MIRRORKEEPER copies the type of the last card you play — shown on the giant mirror a full turn ahead. Vary your types to earn <b>shards</b>; <b>3 shards SHATTER</b> the mirror for +8 damage and make the rival skip its turn. Feed it a weak copy on purpose, or starve it. First to 0 Life wins.</p>
+    <p class="howto small">Strike ⚔ red · Guard 🛡 blue · Mend ❧ green · Draw ✒ gold · Trick ★ purple — 30 Life each, draw 2 per turn, Ember to play cards.</p>
+    <button id="btn-begin" class="btn big">CLICK TO BEGIN</button>
+    <p class="keys-hint">Mouse + keyboard: 1–6 play a card, Space ends your turn</p>
+  </div>
+</div>
+
+<div id="end-screen" class="overlay hidden">
+  <div class="overlay-card">
+    <h1 id="end-title">VICTORY</h1>
+    <p id="end-sub">The mirror lies shattered at your feet.</p>
+    <div id="end-stats"></div>
+    <button id="btn-again" class="btn big">PLAY AGAIN (R)</button>
+  </div>
+</div>
+
+<div id="banner" class="hidden"></div>
+
+<script src="src/audio.js"></script>
+<script src="src/cards.js"></script>
+<script src="src/state.js"></script>
+<script src="src/ai.js"></script>
+<script src="src/render.js"></script>
+<script src="src/input.js"></script>
+<script src="src/shots.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
